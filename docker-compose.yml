@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  inventory-app:
+    build: .
+    image: inventory-service:compose
+    container_name: inventory-service-container
+    ports:
+      - "8080:8000"
+    restart: always
