@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  events-svc-s05:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SERVICE_NAME=events-main
+    networks:
+      - net
+
+  other-svc:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - SERVICE_NAME=other-service
+    networks:
+      - net
+
+  gateway:
+    image: nginx:alpine
+    volumes:
+      - ./infra/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:8080"
+    depends_on:
+      - events-svc-s05
+      - other-svc
+    networks:
+      - net
+
+networks:
+  net:
+    driver: bridge
