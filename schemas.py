@@ -1,16 +1,19 @@
+"""Схемы для бронирований (вариант 5, группа ИА332).
+
+Ранее здесь были модели товаров; для лабораторной 1 используется ресурс `bookings`
+с полями `name` и `date` согласно `variants/332/s05/week-01.json`.
+"""
+
 from pydantic import BaseModel
-from typing import Optional
 
-class ProductBase(BaseModel):
+
+class BookingCreate(BaseModel):
     name: str
-    description: Optional[str] = None
-    price: float
-    stock_quantity: int
+    date: str
 
-class ProductCreate(ProductBase):
-    pass
 
-class Product(ProductBase):
+class Booking(BookingCreate):
     id: int
+
     class Config:
         from_attributes = True

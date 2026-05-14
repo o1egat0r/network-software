@@ -1,26 +1,28 @@
 from fastapi import FastAPI, HTTPException
-from typing import List
-from schemas import Product, ProductCreate
+from schemas import Booking, BookingCreate
 
-app = FastAPI(title="Inventory Microservice")
-products_db = []
-id_counter = 1
+app = FastAPI(title="bookings-svc-s05 — ИА332, вариант 5")
 
-@app.post("/products/", response_model=Product, status_code=201)
-async def create_product(product: ProductCreate):
-    global id_counter
-    new_product = Product(id=id_counter, **product.model_dump())
-    products_db.append(new_product)
-    id_counter += 1
-    return new_product
+_store: dict[int, Booking] = {}
+_next_id: int = 1
 
-@app.get("/products/", response_model=List[Product])
-async def get_products():
-    return products_db
 
-@app.get("/products/{product_id}", response_model=Product)
-async def get_product(product_id: int):
-    product = next((p for p in products_db if p.id == product_id), None)
-    if not product:
-        raise HTTPException(status_code=404, detail="Товар не найден")
-    return product
+@app.get("/bookings")
+def list_bookings() -> list[dict]:
+    return [b.model_dump() for b in _store.values()]
+
+
+@app.post("/bookings", status_code=201)
+def create_booking(body: BookingCreate) -> dict:
+    global _next_id
+    booking = Booking(id=_next_id, **body.model_dump())
+    _store[_next_id] = booking
+    _next_id += 1
+    return booking.model_dump()
+
+
+@app.get("/bookings/{booking_id}")
+def get_booking(booking_id: int) -> dict:
+    if booking_id not in _store:
+        raise HTTPException(status_code=404, detail="Бронирование не найдено")
+    return _store[booking_id].model_dump()

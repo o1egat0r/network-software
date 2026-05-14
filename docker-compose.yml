@@ -1,9 +1,9 @@
-version: '3.8'
+version: "3.8"
 services:
-  inventory-app:
+  bookings-app:
     build: .
-    image: inventory-service:compose
-    container_name: inventory-service-container
+    image: bookings-s05:compose
+    container_name: bookings-container
     ports:
-      - "8080:8000"
+      - "8152:8000"
     restart: always
