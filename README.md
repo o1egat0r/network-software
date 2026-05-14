@@ -16,6 +16,15 @@
 docker compose up --build
 ```
 
+Проверка без ручного подъёма контейнеров:
+
+```bash
+pip install -r requirements.txt
+python -m pytest tests -q
+```
+
+При запущенном Docker: `make verify-docker` (на GitHub Actions это делают отдельные шаги CI).
+
 Шлюз слушает на хосте порт **8217** (как порт сервиса `events-svc-s05` в варианте): `http://127.0.0.1:8217/api/events/`, `http://127.0.0.1:8217/api/v1/other`.
 
 Конфиг маршрутизации: `infra/nginx.conf`.

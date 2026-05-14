@@ -8,33 +8,41 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     env:
-      WEEK: "01"
       GROUP: "332"
       STUDENT_ID: "s05"
       IMAGE_NAME: "devices-s05"
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: "3.11"
+          cache: "pip"
+
       - name: Установка зависимостей
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Линтер (необязательно)
-        run: |
-          echo "В этом месте вам необходимо: добавить шаг линтера (ruff/flake8)"
+
+      - name: Проверка синтаксиса Python
+        run: python -m compileall labs services infra -q
+
       - name: Запуск тестов
-        run: make test WEEK=${{ env.WEEK }}
-      - name: Сборка Docker-образа
-        run: |
-          docker build -t $IMAGE_NAME -f weeks/week-10/Dockerfile weeks/week-10
+        run: make test
+
+      - name: Проверка docker-compose (шлюз + events + other)
+        run: docker compose config -q
+
+      - name: Сборка Docker-образа (лаба 10)
+        run: docker build -t $IMAGE_NAME -f labs/week-10/Dockerfile labs/week-10
+
       - name: Подготовка артефактов
         run: |
           mkdir -p artifacts
-          cp weeks/week-10/report.md artifacts/ || true
-          cp weeks/week-14/README.md artifacts/ || true
+          cp labs/week-10/report.md artifacts/ || true
+          cp labs/week-15/analysis.md artifacts/ || true
+          cp README.md artifacts/ || true
+
       - name: Публикация артефактов
         uses: actions/upload-artifact@v4
         with:
