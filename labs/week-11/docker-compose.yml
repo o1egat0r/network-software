@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  photos-svc-s05:
+    image: nginx:alpine
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - app-net
+
+  gateway:
+    image: nginx:alpine
+    depends_on:
+      - photos-svc-s05
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
