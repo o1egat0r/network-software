@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package shipments.v1;
+
+// gRPC-сервис отгрузок (shipments-s05).
+service ShipmentsService {
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse);
+}
+
+message GetStatusRequest {
+  string tracking = 1;
+}
+
+message GetStatusResponse {
+  string id = 1;
+  string tracking = 2;
+  string state = 3;
+}
