@@ -1,0 +1,16 @@
+"""Схема GraphQL для лайков (likes-s05): тип Like, запрос likes, мутация createLike."""
+
+type Like {
+  id: ID!
+  name: String!
+  target: String!
+}
+
+type Query {
+  likes: [Like!]!
+  like(id: ID!): Like
+}
+
+type Mutation {
+  createLike(name: String!, target: String!): Like!
+}
