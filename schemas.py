@@ -1,18 +1,14 @@
-"""Схемы для бронирований (вариант 5, группа ИА332).
-
-Ранее здесь были модели товаров; для лабораторной 1 используется ресурс `bookings`
-с полями `name` и `date` согласно `variants/332/s05/week-01.json`.
-"""
+"""Схемы для комментариев (лаб. 2, вариант 5, ИА332 — ресурс `comments`, поле `author`)."""
 
 from pydantic import BaseModel
 
 
-class BookingCreate(BaseModel):
+class CommentCreate(BaseModel):
     name: str
-    date: str
+    author: str
 
 
-class Booking(BookingCreate):
+class Comment(CommentCreate):
     id: int
 
     class Config:

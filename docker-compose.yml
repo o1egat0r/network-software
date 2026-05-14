@@ -1,9 +1,9 @@
 version: "3.8"
 services:
-  bookings-app:
+  comments-app:
     build: .
-    image: bookings-s05:compose
-    container_name: bookings-container
+    image: comments-s05:compose
+    container_name: comments-container
     ports:
-      - "8152:8000"
+      - "8118:8000"
     restart: always

@@ -1,28 +1,47 @@
 from fastapi import FastAPI, HTTPException
-from schemas import Booking, BookingCreate
+from starlette.responses import Response
 
-app = FastAPI(title="bookings-svc-s05 — ИА332, вариант 5")
+from schemas import Comment, CommentCreate
 
-_store: dict[int, Booking] = {}
+app = FastAPI(title="comments-svc-s05 — ИА332, вариант 5")
+
+_store: dict[int, Comment] = {}
 _next_id: int = 1
 
 
-@app.get("/bookings")
-def list_bookings() -> list[dict]:
-    return [b.model_dump() for b in _store.values()]
+@app.get("/comments")
+def list_comments() -> list[dict]:
+    return [c.model_dump() for c in _store.values()]
 
 
-@app.post("/bookings", status_code=201)
-def create_booking(body: BookingCreate) -> dict:
+@app.post("/comments", status_code=201)
+def create_comment(body: CommentCreate) -> dict:
     global _next_id
-    booking = Booking(id=_next_id, **body.model_dump())
-    _store[_next_id] = booking
+    c = Comment(id=_next_id, **body.model_dump())
+    _store[_next_id] = c
     _next_id += 1
-    return booking.model_dump()
+    return c.model_dump()
 
 
-@app.get("/bookings/{booking_id}")
-def get_booking(booking_id: int) -> dict:
-    if booking_id not in _store:
-        raise HTTPException(status_code=404, detail="Бронирование не найдено")
-    return _store[booking_id].model_dump()
+@app.get("/comments/{comment_id}")
+def get_comment(comment_id: int) -> dict:
+    if comment_id not in _store:
+        raise HTTPException(status_code=404, detail="Комментарий не найден")
+    return _store[comment_id].model_dump()
+
+
+@app.put("/comments/{comment_id}")
+def replace_comment(comment_id: int, body: CommentCreate) -> dict:
+    if comment_id not in _store:
+        raise HTTPException(status_code=404, detail="Комментарий не найден")
+    c = Comment(id=comment_id, **body.model_dump())
+    _store[comment_id] = c
+    return c.model_dump()
+
+
+@app.delete("/comments/{comment_id}", status_code=204)
+def delete_comment(comment_id: int) -> Response:
+    if comment_id not in _store:
+        raise HTTPException(status_code=404, detail="Комментарий не найден")
+    del _store[comment_id]
+    return Response(status_code=204)
