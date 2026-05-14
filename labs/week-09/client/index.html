@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebRTC — messages-s05</title>
+</head>
+<body>
+  <h1>messages-s05 — заготовка RTCPeerConnection</h1>
+  <script>
+    const PROJECT_CODE = "messages-s05";
+    const pc = new RTCPeerConnection({
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    });
+    console.log("project", PROJECT_CODE, "pc", pc);
+  </script>
+</body>
+</html>
